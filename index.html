@@ -5,6 +5,7 @@
 <title>تقرير الحملات</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
+    * { box-sizing: border-box; }
     body {
         font-family: Tahoma, Arial, sans-serif;
         background: #f7f7f7;
@@ -12,10 +13,20 @@
         padding: 20px;
         color: #333;
     }
+
+    /* === ثابت العرض ومُتمركز === */
+    .container {
+        max-width: 1200px;   /* غيّرها حسب المقاس اللي تفضّله */
+        margin: 0 auto;      /* توسيط المحتوى */
+        width: 100%;
+    }
+
     h1 {
         text-align: center;
         color: #1a73e8;
+        margin-top: 0;
     }
+
     .cards {
         display: flex;
         flex-wrap: wrap;
@@ -30,6 +41,7 @@
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         flex: 1 1 200px;
         text-align: center;
+        min-width: 220px;
     }
     .card h2 {
         margin: 0;
@@ -42,73 +54,100 @@
         font-weight: bold;
         color: #111;
     }
+
+    .section-title {
+        margin: 30px 0 10px;
+        font-size: 20px;
+        color: #1a73e8;
+    }
+
+    /* جداول */
     table {
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 30px;
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
     th, td {
-        border: 1px solid #ddd;
-        padding: 8px 10px;
+        border: 1px solid #eee;
+        padding: 10px 12px;
         text-align: center;
     }
     th {
         background: #1a73e8;
         color: white;
     }
-    .section-title {
-        margin: 30px 0 10px;
-        font-size: 20px;
-        color: #1a73e8;
+
+    /* الرسوم */
+    .chart-wrap {
+        background: #fff;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
     canvas {
-        background: white;
-        border-radius: 10px;
-        padding: 10px;
-        margin-bottom: 30px;
+        width: 100% !important;   /* يملأ عرض الـ container */
+        height: 420px !important; /* ارتفاع مناسب وثابت */
+        display: block;
+    }
+
+    /* تحسين الموبايل */
+    @media (max-width: 600px) {
+        .card { min-width: 100%; }
+        canvas { height: 320px !important; }
     }
 </style>
 </head>
 <body>
 
-<h1>📊 تقرير الحملات</h1>
+<div class="container">
+    <h1>📊 تقرير الحملات</h1>
 
-<div class="cards">
-    <div class="card"><h2>إجمالي المبيعات</h2><p>SAR 6,164.19</p></div>
-    <div class="card"><h2>عدد الطلبات</h2><p>21</p></div>
-    <div class="card"><h2>متوسط حجم السلة</h2><p>SAR 293.53</p></div>
-    <div class="card"><h2>المبيعات للعميل</h2><p>SAR 158.06</p></div>
-    <div class="card"><h2>عدد المنتجات/عميل</h2><p>1.667</p></div>
-    <div class="card"><h2>السلات المتروكة</h2><p>42 (SAR 10,136.31)</p></div>
+    <div class="cards">
+        <div class="card"><h2>إجمالي المبيعات</h2><p>SAR 6,164.19</p></div>
+        <div class="card"><h2>عدد الطلبات</h2><p>21</p></div>
+        <div class="card"><h2>متوسط حجم السلة</h2><p>SAR 293.53</p></div>
+        <div class="card"><h2>المبيعات للعميل</h2><p>SAR 158.06</p></div>
+        <div class="card"><h2>عدد المنتجات/عميل</h2><p>1.667</p></div>
+        <div class="card"><h2>السلات المتروكة</h2><p>42 (SAR 10,136.31)</p></div>
+    </div>
+
+    <h2 class="section-title">📅 الطلبات والمبيعات عبر الزمن</h2>
+    <div class="chart-wrap">
+        <canvas id="ordersSalesChart"></canvas>
+    </div>
+
+    <h2 class="section-title">📊 مقارنة أداء المنصات</h2>
+    <div class="chart-wrap">
+        <canvas id="platformsChart"></canvas>
+    </div>
+
+    <h2 class="section-title">📈 إحصائيات المنصات</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>المنصة</th>
+                <th>الإنفاق (SAR)</th>
+                <th>عدد المشتريات</th>
+                <th>قيمة المشتريات (SAR)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Meta</td><td>5,201.96</td><td>18</td><td>5,057.25</td></tr>
+            <tr><td>TikTok</td><td>1,857.34</td><td>3</td><td>1,106.75</td></tr>
+        </tbody>
+    </table>
+
+    <p style="text-align:center; font-size:14px; color:#777;">
+        <a href="https://docs.google.com/spreadsheets/d/1ZKnnyX3IOeI8DrbCwS6c-Kt5UoTJBjsQ/edit?usp=sharing" target="_blank">
+            🔗 تفاصيل الطلبات
+        </a>
+    </p>
 </div>
-
-<h2 class="section-title">📅 الطلبات والمبيعات عبر الزمن</h2>
-<canvas id="ordersSalesChart" height="120"></canvas>
-
-<h2 class="section-title">📊 مقارنة أداء المنصات</h2>
-<canvas id="platformsChart" height="120"></canvas>
-
-<h2 class="section-title">📈 إحصائيات المنصات</h2>
-<table>
-    <thead>
-        <tr>
-            <th>المنصة</th>
-            <th>الإنفاق (SAR)</th>
-            <th>عدد المشتريات</th>
-            <th>قيمة المشتريات (SAR)</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr><td>Meta</td><td>5,201.96</td><td>18</td><td>5,057.25</td></tr>
-        <tr><td>TikTok</td><td>1,857.34</td><td>3</td><td>1,106.75</td></tr>
-    </tbody>
-</table>
-
-<p style="text-align:center; font-size:14px; color:#777;">
-    <a href="https://docs.google.com/spreadsheets/d/1ZKnnyX3IOeI8DrbCwS6c-Kt5UoTJBjsQ/edit?usp=sharing" target="_blank">
-        🔗 تفاصيل الطلبات
-    </a>
-</p>
 
 <script>
     // Chart 1: Orders & Sales Over Time
@@ -128,7 +167,8 @@
                     borderColor: '#1a73e8',
                     backgroundColor: 'rgba(26,115,232,0.2)',
                     fill: true,
-                    yAxisID: 'y'
+                    yAxisID: 'y',
+                    tension: 0.35
                 },
                 {
                     label: 'المبيعات (SAR)',
@@ -136,12 +176,14 @@
                     borderColor: '#e8711a',
                     backgroundColor: 'rgba(232,113,26,0.2)',
                     fill: true,
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
+                    tension: 0.35
                 }
             ]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
             stacked: false,
             plugins: {
@@ -152,7 +194,8 @@
                 y: {
                     type: 'linear',
                     position: 'left',
-                    title: { display: true, text: 'عدد الطلبات' }
+                    title: { display: true, text: 'عدد الطلبات' },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
                 },
                 y1: {
                     type: 'linear',
@@ -185,13 +228,13 @@
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: { position: 'top' }
-            },
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top' } },
             scales: {
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: 'القيمة (SAR)' }
+                    title: { display: true, text: 'القيمة (SAR)' },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
                 }
             }
         }
