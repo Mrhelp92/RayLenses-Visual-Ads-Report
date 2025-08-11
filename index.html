@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تقرير الحملات</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: Tahoma, Arial, sans-serif;
+        background: #f7f7f7;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+    h1 {
+        text-align: center;
+        color: #1a73e8;
+    }
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    .card {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        flex: 1 1 200px;
+        text-align: center;
+    }
+    .card h2 {
+        margin: 0;
+        font-size: 18px;
+        color: #666;
+    }
+    .card p {
+        margin: 10px 0 0;
+        font-size: 20px;
+        font-weight: bold;
+        color: #111;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px 10px;
+        text-align: center;
+    }
+    th {
+        background: #1a73e8;
+        color: white;
+    }
+    .section-title {
+        margin: 30px 0 10px;
+        font-size: 20px;
+        color: #1a73e8;
+    }
+    canvas {
+        background: white;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 30px;
+    }
+</style>
+</head>
+<body>
+
+<h1>📊 تقرير الحملات</h1>
+
+<div class="cards">
+    <div class="card"><h2>إجمالي المبيعات</h2><p>SAR 6,164.19</p></div>
+    <div class="card"><h2>عدد الطلبات</h2><p>21</p></div>
+    <div class="card"><h2>متوسط حجم السلة</h2><p>SAR 293.53</p></div>
+    <div class="card"><h2>المبيعات للعميل</h2><p>SAR 158.06</p></div>
+    <div class="card"><h2>عدد المنتجات/عميل</h2><p>1.667</p></div>
+    <div class="card"><h2>السلات المتروكة</h2><p>42 (SAR 10,136.31)</p></div>
+</div>
+
+<h2 class="section-title">📅 الطلبات والمبيعات عبر الزمن</h2>
+<canvas id="ordersSalesChart" height="120"></canvas>
+
+<h2 class="section-title">📊 مقارنة أداء المنصات</h2>
+<canvas id="platformsChart" height="120"></canvas>
+
+<h2 class="section-title">📈 إحصائيات المنصات</h2>
+<table>
+    <thead>
+        <tr>
+            <th>المنصة</th>
+            <th>الإنفاق (SAR)</th>
+            <th>عدد المشتريات</th>
+            <th>قيمة المشتريات (SAR)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>Meta</td><td>5,201.96</td><td>18</td><td>5,057.25</td></tr>
+        <tr><td>TikTok</td><td>1,857.34</td><td>3</td><td>1,106.75</td></tr>
+    </tbody>
+</table>
+
+<p style="text-align:center; font-size:14px; color:#777;">
+    <a href="https://docs.google.com/spreadsheets/d/1ZKnnyX3IOeI8DrbCwS6c-Kt5UoTJBjsQ/edit?usp=sharing" target="_blank">
+        🔗 تفاصيل الطلبات
+    </a>
+</p>
+
+<script>
+    // Chart 1: Orders & Sales Over Time
+    const ctx1 = document.getElementById('ordersSalesChart').getContext('2d');
+    new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: [
+                "14 يوليو","19 يوليو","22 يوليو","24 يوليو","27 يوليو",
+                "28 يوليو","30 يوليو","31 يوليو","1 أغسطس","2 أغسطس",
+                "4 أغسطس","9 أغسطس","10 أغسطس"
+            ],
+            datasets: [
+                {
+                    label: 'عدد الطلبات',
+                    data: [1,1,1,1,3,2,1,1,1,3,1,2,3],
+                    borderColor: '#1a73e8',
+                    backgroundColor: 'rgba(26,115,232,0.2)',
+                    fill: true,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'المبيعات (SAR)',
+                    data: [149,596,149,298,796,696,547,249,398,845,298,696,447],
+                    borderColor: '#e8711a',
+                    backgroundColor: 'rgba(232,113,26,0.2)',
+                    fill: true,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            stacked: false,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: { mode: 'index', intersect: false }
+            },
+            scales: {
+                y: {
+                    type: 'linear',
+                    position: 'left',
+                    title: { display: true, text: 'عدد الطلبات' }
+                },
+                y1: {
+                    type: 'linear',
+                    position: 'right',
+                    title: { display: true, text: 'المبيعات (SAR)' },
+                    grid: { drawOnChartArea: false }
+                }
+            }
+        }
+    });
+
+    // Chart 2: Platforms Performance
+    const ctx2 = document.getElementById('platformsChart').getContext('2d');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Meta', 'TikTok'],
+            datasets: [
+                {
+                    label: 'الإنفاق (SAR)',
+                    data: [5201.96, 1857.34],
+                    backgroundColor: '#1a73e8'
+                },
+                {
+                    label: 'قيمة المشتريات (SAR)',
+                    data: [5057.25, 1106.75],
+                    backgroundColor: '#e8711a'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'القيمة (SAR)' }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
